@@ -1,0 +1,81 @@
+# vRA Virtual Appliance Filebeat Configufration File
+
+#=========================== Filebeat inputs =============================
+filebeat.inputs:
+# Integration Scripting Log
+- type: log
+  enabled: true
+  pipeline: "pipeline-logs-vrava"
+  tags: ["logname_vrava_integrated_scripting"]
+  fields:
+    logname: vrava_integrated_scripting
+  paths:
+    - /var/log/vmware/vco/app-server/integration-scripting.log
+    #- /var/log/vmware/vco/app-server/integration-server.log
+    #- /var/log/vmware/vco/app-server/scripting.log
+    #- /var/log/vmware/vco/app-server/server.log
+    #- c:\programdata\elasticsearch\logs\*
+
+  ### Multiline options
+
+  # Mutiline can be used for log messages spanning multiple lines. This is common
+  # for Java Stack Traces or C-Line Continuation
+
+  # The regexp Pattern that has to be matched. The example pattern matches all lines starting with [
+  #multiline.pattern: ^\[
+
+  # Defines if the pattern set under pattern should be negated or not. Default is false.
+  #multiline.negate: false
+
+  # Match can be set to "after" or "before". It is used to define if lines should be append to a pattern
+  # that was (not) matched before or after or as long as a pattern is not matched based on negate.
+  # Note: After is the equivalent to previous and before is the equivalent to to next in Logstash
+  #multiline.match: after
+
+#============================= Filebeat modules ===============================
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+#==================== Elasticsearch template setting ==========================
+setup.template.settings:
+  index.number_of_shards: 3
+
+#================================ General =====================================
+name: "vrava-filebeat"
+tags: ["platform-vmware","server-vrava","domain-boyce.local","role-automation"]
+env: production
+
+#============================== Dashboards =====================================
+setup.dashboards.enabled: false
+
+#============================== Kibana =====================================
+setup.kibana:
+  host: "192.168.1.104:5601"
+
+#================================ Outputs =====================================
+
+#-------------------------- Elasticsearch output ------------------------------
+#output.elasticsearch:
+  # Array of hosts to connect to.
+  #hosts: ["192.168.1.104:9200"]
+
+  # Optional protocol and basic auth credentials.
+  #protocol: "https"
+  #username: "elastic"
+  #password: "changeme"
+
+#----------------------------- Logstash output --------------------------------
+output.logstash:
+  # The Logstash hosts
+  hosts: ["192.168.1.104:5044"]
+
+#================================ Logging =====================================
+#logging.level: debug
+#logging.selectors: ["*"]
+
+#============================== Custom =====================================
+#output.elasticsearch.index: "vmware-vra-filebeat-%{+yyyy.MM.dd}"
+setup.template.name: "vmware-vra-filebeat"
+setup.template.pattern: "vmware-vra-filebeat-*"
+setup.dashboards.index: "vmware-vra-filebeat-*"

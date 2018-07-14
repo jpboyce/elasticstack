@@ -1,0 +1,90 @@
+# Filebeat configuration file for vRA IAAS Server
+
+#=========================== Filebeat inputs =============================
+filebeat.inputs:
+# Management Agent Log
+- type: log
+  enabled: true
+  pipeline: "pipeline-logs-iaas"
+  tags: ["logname_iaas_management_agent"]
+  fields:
+    logname: iaas_management_agent
+  paths:
+    - C:\Program Files (x86)\VMware\vCAC\Management Agent\Logs\All.log
+# IAAS Server Log
+- type: log
+  enabled: true
+  pipeline: "pipeline-logs-iaas"
+  tags: ["logname_iaas_server_log"]
+  fields:
+    logname: iaas_server_log
+  paths:
+    - C:\Program Files (x86)\VMware\vCAC\Server\Logs\All.log
+# vSphere Agent Log
+- type: log
+  enabled: true
+  pipeline: "pipeline-logs-iaas"
+  tags: ["logname_iaas_vsphere_agent"]
+  fields:
+    logname: iaas_vsphere_agent
+  paths:
+    - C:\Program Files (x86)\VMware\vCAC\Agents\vCenter\logs\vSphereAgent.log
+
+#============================= Filebeat modules ===============================
+filebeat.config.modules:
+  # Glob pattern for configuration loading
+  path: ${path.config}/modules.d/*.yml
+  # Set to true to enable config reloading
+  reload.enabled: false
+
+#==================== Elasticsearch template setting ==========================
+setup.template.settings:
+  index.number_of_shards: 3
+  #index.codec: best_compression
+  #_source.enabled: false
+
+#================================ General =====================================
+# The name of the shipper that publishes the network data. It can be used to group
+# all the transactions sent by a single shipper in the web interface.
+name: vraiaas-filebeat
+tags: ["platform-windows","server-vraiaas","domain-boyce.local","role-automation"]
+env: production
+
+#============================== Kibana =====================================
+# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+# This requires a Kibana endpoint configuration.
+setup.kibana:
+  host: "192.168.1.104:5601"
+
+#================================ Outputs =====================================
+
+#----------------------------- Logstash output --------------------------------
+output.logstash:
+  # The Logstash hosts
+  hosts: ["192.168.1.104:5044"]
+
+#================================ Logging =====================================
+
+logging.level: debug
+logging.selectors: ["*"]
+logging.metrics.enabled: false
+
+#============================== Xpack Monitoring ===============================
+# filebeat can export internal metrics to a central Elasticsearch monitoring
+# cluster.  This requires xpack monitoring to be enabled in Elasticsearch.  The
+# reporting is disabled by default.
+
+# Set to true to enable the monitoring reporter.
+#xpack.monitoring.enabled: false
+
+# Uncomment to send the metrics to Elasticsearch. Most settings from the
+# Elasticsearch output are accepted here as well. Any setting that is not set is
+# automatically inherited from the Elasticsearch output configuration, so if you
+# have the Elasticsearch output configured, you can simply uncomment the
+# following line.
+#xpack.monitoring.elasticsearch:
+# output.elasticsearch.index: "windows-vraiaas-filebeat-%{+yyyy.MM.dd}"
+output.logstash.index: "windows-vraiaas-filebeat-%{+yyyy.MM.dd}"
+setup.template.name: "windows-vraiaas-filebeat"
+setup.template.pattern: "windows-vraiaas-filebeat-*"
+setup.dashboards.index: "windows-vraiaas-filebeat-*"
