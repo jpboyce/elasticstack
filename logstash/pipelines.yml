@@ -4,7 +4,12 @@
 
 #- pipeline.id: main
 #  path.config: "/etc/logstash/conf.d/*.conf"
+# IIS Logs
 - pipeline.id: logs-iis
   path.config: "/etc/logstash/conf.d/pipeline-logs-iis.conf"
+# vRA IAAS Logs
 - pipeline.id: logs-iaas
   path.config: "/etc/logstash/conf.d/pipeline-logs-iaas.conf"
+# vRA Virtual Appliance Logs
+- pipeline.id: logs-vrava
+  path.config: "/etc/logstash/conf.d/pipeline-logs-vrava.conf"
