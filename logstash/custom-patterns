@@ -1,5 +1,7 @@
 # Custom Patterns File
 
+# UPN Logon Format
+UPN %{USER}@%{HOSTNAME}
 
 # vRA IAAS Server - C:\Program Files (x86)\VMware\vCAC\Server\All.log
 VRA_IAAS_SERVER_ALL \[UTC:%{TIMESTAMP_ISO8601:utctime} Local:%{TIMESTAMP_ISO8601:localtime}\] \[%{LOGLEVEL:category}\]: \[sub-thread-Id="%{INT:subthreadid}"%{SPACE}context="%{DATA:context}"%{SPACE}token="%{DATA:token}"\] %{GREEDYDATA:messagetext}
@@ -7,7 +9,9 @@ VRA_IAAS_SERVER_ALL \[UTC:%{TIMESTAMP_ISO8601:utctime} Local:%{TIMESTAMP_ISO8601
 # vRA IAAS Server - C:\Program Files (x86)\VMware\vCAC\Management Agent\Logs\All.log
 VRA_IAAS_MANAGEMENT_AGENT \[UTC:%{TIMESTAMP_ISO8601:utctime} Local:%{TIMESTAMP_ISO8601:localtime}\] \[%{DATA:category}\]: \[sub-thread-Id="%{INT:subthreadid}"%{SPACE}context="%{DATA:context}"%{SPACE}token="%{DATA:token}"\] %{GREEDYDATA:messagetext}
 
-
 # vRA VA Patterns
 # integration-scripting.log
 VRA_VA_INTEGRATION_SCRIPTING %{TIMESTAMP_ISO8601:timestamp} vco: \[component="%{PROG:component}" priority="%{LOGLEVEL:loglevel}" thread="%{PROG:thread}" user="%{USERNAME:user}@%{HOSTNAME:domain}" context="%{DATA:context}" token="%{UUID:execid}" wfid="%{UUID:workflowid}" wfname="%{DATA:workflowname}" anctoken="%{DATA:anctoken}" wfstack="%{UUID:wfstackid}" instanceid="%{UUID:instanceid}"\] %{GREEDYDATA:messagebody}
+
+# Integrated-server.log
+VRA_VA_INTEGRATION_SERVER %{TIMESTAMP_ISO8601:timestamp} vco: \[component="%{PROG:component}" priority="%{LOGLEVEL:loglevel}" thread="%{PROG:thread}" user="(?:%{UPN:user}|-)" context="(?:%{DATA:context}|-)" token="(?:%{DATA:execid}|-)" wfid="(?:%{DATA:workflowid}|-)" wfname="(?:%{DATA:workflowname}|-)" anctoken="(?:%{DATA:anctoken}|-)" wfstack="(?:%{DATA:wfstackid}|-)" instanceid="%{UUID:instanceid}"\] %{GREEDYDATA:messagebody}

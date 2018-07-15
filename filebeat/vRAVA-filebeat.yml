@@ -6,12 +6,19 @@ filebeat.inputs:
 - type: log
   enabled: true
   pipeline: "pipeline-logs-vrava"
-  tags: ["logname_vrava_integrated_scripting"]
+  tags: ["logname_vrava_integration_scripting"]
   fields:
     logname: vrava_integrated_scripting
   paths:
     - /var/log/vmware/vco/app-server/integration-scripting.log
-    #- /var/log/vmware/vco/app-server/integration-server.log
+- type: log
+  enabled: true
+  pipeline: "pipeline-logs-vrava"
+  tags: ["logname_vrava_integration_server"]
+  fields:
+    logname: vrava_integrated_server
+  paths:
+    - /var/log/vmware/vco/app-server/integration-server.log
     #- /var/log/vmware/vco/app-server/scripting.log
     #- /var/log/vmware/vco/app-server/server.log
     #- c:\programdata\elasticsearch\logs\*
@@ -68,7 +75,7 @@ setup.kibana:
 #----------------------------- Logstash output --------------------------------
 output.logstash:
   # The Logstash hosts
-  hosts: ["192.168.1.104:5044"]
+  hosts: ["192.168.1.104:5045"]
 
 #================================ Logging =====================================
 #logging.level: debug
