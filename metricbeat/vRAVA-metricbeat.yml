@@ -1,0 +1,70 @@
+###################### Metricbeat Configuration #######################
+
+#==========================  Modules configuration ============================
+metricbeat.config.modules:
+  # Glob pattern for configuration loading
+  path: ${path.config}/modules.d/*.yml
+  # Set to true to enable config reloading
+  reload.enabled: false
+
+#==================== Elasticsearch template setting ==========================
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+  #_source.enabled: false
+
+output.elasticsearch.index: "vmware-vra-metricbeat-%{+yyyy.MM.dd}"
+setup.template.name: "vmware-vrava-metricbeat"
+setup.template.pattern: "vmware-vrava-metricbeat-*"
+setup.dashboards.index: "vmware-vrava-metricbeat-*"
+#================================ General =====================================
+name: vrava-metricbeat
+tags: ["platform-vmware","server-vrava","domain-boyce.local","role-automation"]
+fields:
+  env: production
+#============================== Kibana =====================================
+setup.kibana:
+  host: "192.168.1.104:5601"
+
+#================================ Outputs =====================================
+#-------------------------- Elasticsearch output ------------------------------
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["192.168.1.104:9200"]
+#----------------------------- Logstash output --------------------------------
+#output.logstash:
+  # The Logstash hosts
+  #hosts: ["192.168.1.104:5046"]
+
+#================================ Logging =====================================
+# Sets log level. The default log level is info.
+# Available log levels are: error, warning, info, debug
+#logging.level: debug
+# At debug level, you can selectively enable logging only for some components.
+# To enable all selectors use ["*"]. Examples of other selectors are "beat",
+# "publish", "service".
+#logging.selectors: ["*"]
+
+# Custom Settings
+# Modules
+metricbeat.modules:
+
+# System modules
+- module: system
+  metricsets:
+    - cpu              # CPU usage
+    - memory           # RAM
+    - uptime           # System uptime
+    - filesystem       # File system
+    - fsstat
+    - network          # Network IO
+    - process_summary  # Process summary
+    - load             # CPU load averages
+    - process          # per process metrics
+    - network          # duh...
+    - diskio           # disk io
+    - raid             # raid
+  enabled: true
+  period: 10s
+  processes: ['.*']    # All processes
+  cpu.metrics: ["percentages"]

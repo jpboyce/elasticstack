@@ -1,0 +1,83 @@
+###################### Metricbeat Configuration #######################
+#==========================  Modules configuration ============================
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+#==================== Elasticsearch template setting ==========================
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+  #_source.enabled: false
+
+#================================ General =====================================
+# The name of the shipper that publishes the network data. It can be used to group
+# all the transactions sent by a single shipper in the web interface.
+name: vcsaprod-metricbeat
+tags: ["platform-vmware", "server-vcsaprod", "domain-boyce.local", "role-vCenter"]
+fields:
+  env: production
+
+
+#============================== Dashboards =====================================
+# setup.dashboards.enabled: true
+setup.template.name: "vmware-vcsaprod-metricbeat"
+setup.template.pattern: "vmware-vcsaprod-metricbeat-*"
+#setup.dashboards.url:
+
+#============================== Kibana =====================================
+setup.kibana:
+  host: "192.168.1.104:5601"
+
+#================================ Outputs =====================================
+#-------------------------- Elasticsearch output ------------------------------
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["192.168.1.104:9200"]
+  index: "vmware-vcsaprod-metricbeat-%{+yyyy.MM.dd}"
+
+#----------------------------- Logstash output --------------------------------
+#output.logstash:
+  # The Logstash hosts
+  #hosts: ["localhost:5044"]
+
+#================================ Logging =====================================
+#logging.level: debug
+#logging.selectors: ["*"]
+
+#============================== Xpack Monitoring ===============================
+# Set to true to enable the monitoring reporter.
+#xpack.monitoring.enabled: false
+#xpack.monitoring.elasticsearch:
+
+# Custom Settings
+metricbeat.modules:
+# System modules
+# System modules
+- module: system
+  metricsets:
+    - cpu                               # CPU usage
+    - memory                    # RAM
+    - uptime                    # System uptime
+    - filesystem                # File system
+    - fsstat
+    - network                   # Network IO
+    - process_summary   # Process summary
+  enabled: true
+  period: 10s
+  processes: ['.*']             # All processes
+  cpu.metrics: ["percentages"]
+
+#------------------------------- vSphere Module ------------------------------
+- module: vsphere
+  enabled: true
+  metricsets: ["datastore", "host", "virtualmachine"]
+  period: 10s
+  hosts: ["https://vcsaprod.boyce.local/sdk"]
+
+  username: "metricbeat"
+  password: "P@ssw0rd123"
+  # If insecure is true, don't verify the server's certificate chain
+  insecure: true
+  # Get custom fields when using virtualmachine metric set. Default false.
+  # get_custom_fields: false
