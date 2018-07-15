@@ -8,7 +8,7 @@ filebeat.inputs:
   pipeline: "pipeline-logs-vrava"
   tags: ["logname_vrava_integration_scripting"]
   fields:
-    logname: vrava_integrated_scripting
+    logname: vrava_integration_scripting
   paths:
     - /var/log/vmware/vco/app-server/integration-scripting.log
 - type: log
@@ -16,9 +16,17 @@ filebeat.inputs:
   pipeline: "pipeline-logs-vrava"
   tags: ["logname_vrava_integration_server"]
   fields:
-    logname: vrava_integrated_server
+    logname: vrava_integration_server
   paths:
     - /var/log/vmware/vco/app-server/integration-server.log
+-type: log
+  enabled: true
+  pipeline: "pipeline-logs-vrava"
+  tags: ["logname_vrava_catalina_out"]
+  fields:
+    logname: vrava_catalina_out
+  paths:
+    - /var/log/vmware/vcac/catalina.out
     #- /var/log/vmware/vco/app-server/scripting.log
     #- /var/log/vmware/vco/app-server/server.log
     #- c:\programdata\elasticsearch\logs\*
