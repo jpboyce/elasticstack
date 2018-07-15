@@ -19,7 +19,7 @@ filebeat.inputs:
     logname: vrava_integration_server
   paths:
     - /var/log/vmware/vco/app-server/integration-server.log
--type: log
+- type: log
   enabled: true
   pipeline: "pipeline-logs-vrava"
   tags: ["logname_vrava_catalina_out"]
