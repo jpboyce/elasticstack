@@ -13,3 +13,6 @@
 # vRA Virtual Appliance Logs
 - pipeline.id: logs-vrava
   path.config: "/etc/logstash/conf.d/pipeline-logs-vrava.conf"
+# Common Metricbeat Pipeline
+- pipeline.id: metricbeat-common
+  path.config: "/etc/logstash/conf.d/pipeline-metricbeat-common.conf"
