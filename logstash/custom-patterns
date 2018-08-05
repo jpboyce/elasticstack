@@ -10,10 +10,13 @@ VRA_IAAS_SERVER_ALL \[UTC:%{TIMESTAMP_ISO8601:utctime} Local:%{TIMESTAMP_ISO8601
 VRA_IAAS_MANAGEMENT_AGENT \[UTC:%{TIMESTAMP_ISO8601:utctime} Local:%{TIMESTAMP_ISO8601:localtime}\] \[%{DATA:category}\]: \[sub-thread-Id="%{INT:subthreadid}"%{SPACE}context="%{DATA:context}"%{SPACE}token="%{DATA:token}"\] %{GREEDYDATA:messagetext}
 
 # vRA VA Patterns
-# integration-scripting.log
+
+
+# vRO Component Logs
+# Integration-scripting.log
 VRA_VA_INTEGRATION_SCRIPTING %{TIMESTAMP_ISO8601:timestamp} vco: \[component="%{PROG:component}" priority="%{LOGLEVEL:loglevel}" thread="%{PROG:thread}" user="%{USERNAME:user}@%{HOSTNAME:domain}" context="%{DATA:context}" token="%{UUID:token}" wfid="%{UUID:workflowid}" wfname="%{DATA:workflowname}" anctoken="%{DATA:anctoken}" wfstack="%{UUID:wfstackid}" instanceid="%{UUID:instanceid}"\] %{GREEDYDATA:messagebody}
 
-# Integrated-server.log
+# Integration-server.log
 VRA_VA_INTEGRATION_SERVER %{TIMESTAMP_ISO8601:timestamp} vco: \[component="%{PROG:component}" priority="%{LOGLEVEL:loglevel}" thread="%{PROG:thread}" user="(?:%{UPN:user}|-)" context="(?:%{DATA:context}|-)" token="(?:%{DATA:token}|-)" wfid="(?:%{DATA:workflowid}|-)" wfname="(?:%{DATA:workflowname}|-)" anctoken="(?:%{DATA:anctoken}|-)" wfstack="(?:%{DATA:wfstackid}|-)" instanceid="%{UUID:instanceid}"\] %{GREEDYDATA:messagebody}
 
 # Catalina.out
