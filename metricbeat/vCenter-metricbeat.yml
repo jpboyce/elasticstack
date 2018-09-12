@@ -1,4 +1,5 @@
 ###################### Metricbeat Configuration #######################
+# Generic MetricBeat Configuration file for vCenter servers
 #==========================  Modules configuration ============================
 metricbeat.config.modules:
   path: ${path.config}/modules.d/*.yml
@@ -13,16 +14,16 @@ setup.template.settings:
 #================================ General =====================================
 # The name of the shipper that publishes the network data. It can be used to group
 # all the transactions sent by a single shipper in the web interface.
-name: vcsaprod-metricbeat
-tags: ["platform-vmware", "server-vcsaprod", "domain-boyce.local", "role-vCenter"]
+name: vcsa-metricbeat
+tags: ["platform-vmware", "server-vcsa", "domain-boyce.local", "role-vCenter"]
 fields:
   env: production
 
 
 #============================== Dashboards =====================================
 # setup.dashboards.enabled: true
-setup.template.name: "vmware-vcsaprod-metricbeat"
-setup.template.pattern: "vmware-vcsaprod-metricbeat-*"
+setup.template.name: "vmware-vcsa-metricbeat"
+setup.template.pattern: "vmware-vcsa-metricbeat-*"
 #setup.dashboards.url:
 
 #============================== Kibana =====================================
@@ -34,7 +35,7 @@ setup.kibana:
 output.elasticsearch:
   # Array of hosts to connect to.
   hosts: ["192.168.1.104:9200"]
-  index: "vmware-vcsaprod-metricbeat-%{+yyyy.MM.dd}"
+  index: "vmware-vcsa-metricbeat-%{+yyyy.MM.dd}"
 
 #----------------------------- Logstash output --------------------------------
 #output.logstash:
@@ -73,7 +74,7 @@ metricbeat.modules:
   enabled: true
   metricsets: ["datastore", "host", "virtualmachine"]
   period: 10s
-  hosts: ["https://vcsaprod.boyce.local/sdk"]
+  hosts: ["https://vcsa.boyce.local/sdk"]
 
   username: "metricbeat"
   password: "P@ssw0rd123"
